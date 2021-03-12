@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:journey_tracker/controller/controller.dart';
 import 'package:journey_tracker/pages/chapter_page.dart';
+import 'package:journey_tracker/pages/settings_page.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,17 +19,30 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Season 22'),
+        title: Text("D3 Journey Tracker"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: GetBuilder<Controller>(
-          builder: (controller) => Container(
+      body: GetBuilder<Controller>(
+        init: Controller(),
+        builder: (controller) => Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Container(
             width: double.infinity,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Container(
+                  width: double.infinity,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                      "Season 22",
+                      style: TextStyle(
+                        color: Colors.purple,
+                      ),
+                    ),
+                  ),
+                ),
                 CircularPercentIndicator(
                   radius: 120.0,
                   lineWidth: 13.0,
@@ -81,6 +95,10 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _getDrawerItems(Controller controller) {
     List<Widget> items = [];
 
+    if (controller.chapters == null) {
+      return [];
+    }
+
     items.add(
       UserAccountsDrawerHeader(
         accountName: Text("D3 Seasonal Journey tracker"),
@@ -93,17 +111,23 @@ class _HomePageState extends State<HomePage> {
 
     for (int i = 0; i < controller.chapters.length; i++) {
       items.add(ListTile(
+        leading: Icon(Icons.flare_sharp),
         title: Text(controller.chapters[i].title),
         onTap: () {
           Get.back();
-          Get.to(
-            () => ChapterWidget(
-              chapter: controller.chapters[i].title,
-            ),
-          );
+          Get.to(() => ChapterWidget(chapter: controller.chapters[i].title));
         },
       ));
     }
+
+    items.add(ListTile(
+      leading: Icon(Icons.settings),
+      title: Text("Settings"),
+      onTap: () {
+        Get.back();
+        Get.to(() => SettingsPage());
+      },
+    ));
 
     return items;
   }

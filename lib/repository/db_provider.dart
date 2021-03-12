@@ -20,7 +20,6 @@ class DBProvider {
   static Database _db;
 
   Future<void> initDb() async {
-    print("initDb");
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, dbName);
     _db = await openDatabase(path, version: 1, onOpen: (db) {}, onCreate: (Database db, int version) async {
@@ -35,17 +34,20 @@ class DBProvider {
   }
 
   Future<bool> toggleCompleted(Challenge challenge) async {
-    print("toggleCompleted - isCompleted: ${challenge.isCompleted}");
     int isUpdated = 0;
-    List<Map<String, dynamic>> result = await _db.rawQuery("SELECT COUNT(*) rows FROM $tableChallenges WHERE $columnTitle = ? AND $columnChapter = ?", [challenge.title, challenge.chapter]);
+    List<Map<String, dynamic>> result = await _db.rawQuery("SELECT COUNT(*) as rows FROM $tableChallenges WHERE $columnTitle = ? AND $columnChapter = ?", [challenge.title, challenge.chapter]);
     int rows = result.first["rows"];
     if (rows == 0) {
       isUpdated = await _db.rawUpdate("INSERT INTO $tableChallenges($columnTitle, $columnChapter, $columnIsCompleted) VALUES (?, ?, ?)", [challenge.title, challenge.chapter, 1]);
     } else {
-      isUpdated = await _db.rawUpdate('UPDATE $tableChallenges SET $columnIsCompleted = ? WHERE $columnTitle = ? AND $columnChapter = ?',
-          [challenge.isCompleted == true ? 1 : 0, challenge.title, challenge.chapter]);
+      isUpdated = await _db
+          .rawUpdate('UPDATE $tableChallenges SET $columnIsCompleted = ? WHERE $columnTitle = ? AND $columnChapter = ?', [challenge.isCompleted == true ? 1 : 0, challenge.title, challenge.chapter]);
     }
     return isUpdated == 1;
+  }
+
+  Future<void> clearCompletedChallenges() async {
+    await _db.rawQuery("DELETE FROM $tableChallenges");
   }
 
   Future<List<Challenge>> getChallengesFromChapter(String chapter) async {
@@ -58,6 +60,4 @@ class DBProvider {
       );
     });
   }
-
-  Future close() async => _db.close();
 }

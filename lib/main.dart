@@ -15,10 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'D3 Journey Tracker',
-      home: GetBuilder<Controller>(
-        init: Controller(),
-        builder: (s) => HomePage(),
-      ),
+      home: HomePage(),
       theme: ThemeData(fontFamily: 'Montserrat'),
     );
   }

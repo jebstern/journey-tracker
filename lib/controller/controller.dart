@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
@@ -31,7 +30,6 @@ class Controller extends GetxController {
     await dbProvider.initDb();
     chapters = List<Chapter>.from(json.decode(await rootBundle.loadString("assets/challenges.json")).map((x) => Chapter.fromJson(x)));
     await _setCheckedValues();
-    update();
   }
 
   Future<void> setChapter(String chapterTitle) async {
@@ -51,12 +49,17 @@ class Controller extends GetxController {
     selectedChapterChallenges[index].isCompleted = !selectedChapterChallenges[index].isCompleted;
     await dbProvider.toggleCompleted(selectedChapterChallenges[index]);
     await _setCheckedValues();
-    update();
   }
 
   Future<void> _setCheckedValues() async {
     amountChecked = await dbProvider.getAllChecked();
     amountCheckedLabel = (amountChecked / maxChallengesAmount * 100).toStringAsFixed(1) + " %";
     amountCheckedPercentage = double.parse((amountChecked / maxChallengesAmount).toStringAsFixed(1));
+    update();
+  }
+
+  Future<void> clearCompletedChallenges() async {
+    await dbProvider.clearCompletedChallenges();
+    await _setCheckedValues();
   }
 }
