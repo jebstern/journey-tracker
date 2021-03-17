@@ -31,18 +31,20 @@ class _HomePageState extends State<HomePage> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  width: double.infinity,
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      "Season 22",
-                      style: TextStyle(
-                        color: Colors.purple,
+                controller.title == null
+                    ? Container()
+                    : Container(
+                        width: double.infinity,
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            controller.title,
+                            style: TextStyle(
+                              color: Colors.purple,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
                 CircularPercentIndicator(
                   radius: 120.0,
                   lineWidth: 13.0,
@@ -95,7 +97,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _getDrawerItems(Controller controller) {
     List<Widget> items = [];
 
-    if (controller.chapters == null) {
+    if (controller.seasonJourney.chapters == null) {
       return [];
     }
 
@@ -109,13 +111,13 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
-    for (int i = 0; i < controller.chapters.length; i++) {
+    for (int i = 0; i < controller.seasonJourney.chapters.length; i++) {
       items.add(ListTile(
         leading: Icon(Icons.flare_sharp),
-        title: Text(controller.chapters[i].title),
+        title: Text(controller.seasonJourney.chapters[i].title),
         onTap: () {
           Get.back();
-          Get.to(() => ChapterWidget(chapter: controller.chapters[i].title));
+          Get.to(() => ChapterWidget(chapter: controller.seasonJourney.chapters[i].title));
         },
       ));
     }
