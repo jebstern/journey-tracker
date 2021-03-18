@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
         title: Text("D3 Journey Tracker"),
       ),
       body: GetBuilder<Controller>(
-        init: Controller(),
         builder: (controller) => Padding(
           padding: const EdgeInsets.all(24.0),
           child: Container(
@@ -105,9 +104,6 @@ class _HomePageState extends State<HomePage> {
       UserAccountsDrawerHeader(
         accountName: Text("D3 Seasonal Journey tracker"),
         accountEmail: Text("Total completion: ${c.amountChecked}/85"),
-        currentAccountPicture: CircleAvatar(
-          backgroundImage: AssetImage("assets/logo.png"),
-        ),
       ),
     );
 
@@ -119,6 +115,7 @@ class _HomePageState extends State<HomePage> {
           Get.back();
           Get.to(() => ChapterWidget(chapter: controller.seasonJourney.chapters[i].title));
         },
+        trailing: Text("${controller.seasonJourney.chapters[i].amountCompletedChallenges}/${controller.seasonJourney.chapters[i].challenges.length}"),
       ));
     }
 

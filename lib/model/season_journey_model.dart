@@ -32,6 +32,7 @@ class Chapter {
   String title;
   List<String> challenges;
   String reward;
+  int amountCompletedChallenges = 0;
 
   factory Chapter.fromJson(Map<String, dynamic> json) => Chapter(
         title: json["title"],

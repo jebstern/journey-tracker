@@ -27,13 +27,15 @@ class Controller extends GetxController {
   Controller.empty();
 
   Future<void> _init() async {
-    print("Controller - _init()");
+    print("Controller - _init() called!");
     dbProvider = DBProvider();
-    await dbProvider.initDb();
-    seasonJourney = SeasonJourney.fromJson(json.decode(await rootBundle.loadString("assets/seasonJourney.json")));
+    String jsonString = await rootBundle.loadString("assets/seasonJourney.json");
+    seasonJourney = SeasonJourney.fromJson(json.decode(jsonString));
     title = seasonJourney.title;
-    seasonJourney.chapters.forEach((Chapter chapter) {
+    await dbProvider.initDb(seasonJourney.title ?? "unknownSeason");
+    seasonJourney.chapters.forEach((Chapter chapter) async {
       maxChallengesAmount += chapter.challenges.length;
+      chapter.amountCompletedChallenges = await dbProvider.completedChallengesInChapter(chapter.title);
     });
     await _setCheckedValues();
   }
@@ -62,6 +64,7 @@ class Controller extends GetxController {
   Future<void> toggleCompleted(Challenge updatedChallenge) async {
     int index = selectedChapterChallenges.indexOf(updatedChallenge);
     selectedChapterChallenges[index].isCompleted = !selectedChapterChallenges[index].isCompleted;
+    chapter.amountCompletedChallenges = chapter.amountCompletedChallenges + (selectedChapterChallenges[index].isCompleted == true ? 1 : -1);
     await dbProvider.toggleCompleted(selectedChapterChallenges[index]);
     await _setCheckedValues();
   }

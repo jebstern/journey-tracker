@@ -4,14 +4,12 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-final String dbName = 'season21';
 final String tableChallenges = 'challenges';
-final String columnId = 'id';
 final String columnTitle = 'title';
 final String columnChapter = 'chapter';
 final String columnIsCompleted = 'isCompleted';
 final String createChallengeSql = "CREATE TABLE $tableChallenges ("
-    "$columnId INTEGER AUTO_INCREMENT PRIMARY KEY,"
+    "id INTEGER AUTO_INCREMENT PRIMARY KEY,"
     "$columnTitle TEXT,"
     "$columnChapter TEXT,"
     "$columnIsCompleted INTEGER DEFAULT 0)";
@@ -19,7 +17,7 @@ final String createChallengeSql = "CREATE TABLE $tableChallenges ("
 class DBProvider {
   static Database _db;
 
-  Future<void> initDb() async {
+  Future<void> initDb(String dbName) async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, dbName);
     _db = await openDatabase(path, version: 1, onOpen: (db) {}, onCreate: (Database db, int version) async {
@@ -31,6 +29,11 @@ class DBProvider {
     List<Map<String, dynamic>> result = await _db.rawQuery('SELECT COUNT(*) as checked FROM $tableChallenges WHERE $columnIsCompleted=1');
     Map<String, dynamic> row = result.first;
     return row['checked'];
+  }
+
+  Future<int> completedChallengesInChapter(String chapter) async {
+    List<Map<String, dynamic>> maps = await _db.query(tableChallenges, where: '$columnChapter = ? AND $columnIsCompleted = ?', whereArgs: [chapter, 1]);
+    return maps.length;
   }
 
   Future<bool> toggleCompleted(Challenge challenge) async {

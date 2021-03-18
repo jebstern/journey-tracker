@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:journey_tracker/controller/controller.dart';
 import 'package:journey_tracker/model/challenge_model.dart';
-import 'package:journey_tracker/widgets/challenge_widget.dart';
 
 class ChapterWidget extends StatefulWidget {
   final String chapter;
@@ -15,15 +14,9 @@ class ChapterWidget extends StatefulWidget {
 
 class ChapterWidgetState extends State<ChapterWidget> {
   final Controller c = Get.find<Controller>();
-  List<ChallengeWidget> challengesList2 = [];
-  bool groupValue = false;
 
   void initState() {
     super.initState();
-    init();
-  }
-
-  Future<void> init() async {
     c.setChapter(widget.chapter);
   }
 
@@ -86,7 +79,8 @@ class ChapterWidgetState extends State<ChapterWidget> {
   }
 
   List<Widget> _challengesWidget(Controller controller) {
-    if (controller.selectedChapterChallenges == null) {
+    // If no challenges yet exists for chapter OR current chapter is differnet than previously selected chapter
+    if (controller.selectedChapterChallenges == null || (controller.chapter != null && controller.chapter.title != widget.chapter)) {
       return [];
     } else {
       return controller.selectedChapterChallenges.map((Challenge challenge) {
