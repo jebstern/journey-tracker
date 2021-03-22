@@ -24,15 +24,26 @@ class _HomePageState extends State<HomePage> {
       body: GetBuilder<Controller>(
         builder: (controller) => Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Container(
-            width: double.infinity,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                controller.title == null
-                    ? Container()
-                    : Container(
+          child: controller.initialised == false
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Text("Loading Season Journey data..."),
+                      ),
+                      CircularProgressIndicator(value: null),
+                    ],
+                  ),
+                )
+              : Container(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
                         width: double.infinity,
                         child: FittedBox(
                           fit: BoxFit.fitWidth,
@@ -44,38 +55,40 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                CircularPercentIndicator(
-                  radius: 120.0,
-                  lineWidth: 13.0,
-                  animation: true,
-                  animationDuration: 1000,
-                  percent: c.amountCheckedPercentage,
-                  center: Text(
-                    c.amountCheckedLabel,
-                    style: const TextStyle(
-                      color: Colors.purple,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  circularStrokeCap: CircularStrokeCap.round,
-                  progressColor: Colors.purple,
-                  header: Padding(
-                    padding: const EdgeInsets.only(bottom: 18),
-                    child: Text(
-                      "Total completion: ${controller.amountChecked}/85",
-                      style: const TextStyle(
-                        color: Colors.purple,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24),
+                        child: CircularPercentIndicator(
+                          radius: 120.0,
+                          lineWidth: 13.0,
+                          animation: true,
+                          animationDuration: 1000,
+                          percent: c.amountCheckedPercentage,
+                          center: Text(
+                            c.amountCheckedLabel,
+                            style: const TextStyle(
+                              color: Colors.purple,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          circularStrokeCap: CircularStrokeCap.round,
+                          progressColor: Colors.purple,
+                          header: Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Text(
+                              "Total completion: ${controller.amountChecked}/${c.maxChallengesAmount}",
+                              style: const TextStyle(
+                                color: Colors.purple,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 18),
-              ],
-            ),
-          ),
         ),
       ),
       drawer: GetBuilder<Controller>(
@@ -102,8 +115,8 @@ class _HomePageState extends State<HomePage> {
 
     items.add(
       UserAccountsDrawerHeader(
-        accountName: Text("D3 Seasonal Journey tracker"),
-        accountEmail: Text("Total completion: ${c.amountChecked}/85"),
+        accountName: Text("D3 Season Journey tracker"),
+        accountEmail: Text("Total completion: ${c.amountChecked}/${c.maxChallengesAmount}"),
       ),
     );
 

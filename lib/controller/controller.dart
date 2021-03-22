@@ -9,11 +9,12 @@ import 'package:journey_tracker/repository/db_provider.dart';
 
 class Controller extends GetxController {
   static Controller get to => Get.find();
+  bool initialised = false;
   SeasonJourney seasonJourney;
-  Chapter chapter;
+  Chapter selectedChapter;
   DBProvider dbProvider;
   List<Challenge> selectedChapterChallenges = [];
-  List<Challenge> savedChapterChallenges = [];
+  List<Challenge> toggledChapterChallenges = [];
   int amountChecked = 0;
   double amountCheckedPercentage = 0.0;
   String amountCheckedLabel = "0.0%";
@@ -29,6 +30,7 @@ class Controller extends GetxController {
   Future<void> _init() async {
     print("Controller - _init() called!");
     dbProvider = DBProvider();
+    await Future.delayed(Duration(seconds: 3), (){});
     String jsonString = await rootBundle.loadString("assets/seasonJourney.json");
     seasonJourney = SeasonJourney.fromJson(json.decode(jsonString));
     title = seasonJourney.title;
@@ -38,6 +40,8 @@ class Controller extends GetxController {
       chapter.amountCompletedChallenges = await dbProvider.completedChallengesInChapter(chapter.title);
     });
     await _setCheckedValues();
+    initialised = true;
+    update();
   }
 
   Future<void> initTestData() async {
@@ -46,17 +50,18 @@ class Controller extends GetxController {
     seasonJourney.chapters.forEach((Chapter chapter) {
       maxChallengesAmount += chapter.challenges.length;
     });
+    initialised = true;
     update();
   }
 
   Future<void> setChapter(String chapterTitle) async {
-    savedChapterChallenges.clear();
-    savedChapterChallenges = await dbProvider.getChallengesFromChapter(chapterTitle);
-    chapter = seasonJourney.chapters.firstWhere((Chapter chapter) => chapter.title == chapterTitle, orElse: () => null);
+    toggledChapterChallenges.clear();
+    toggledChapterChallenges = await dbProvider.getChallengesFromChapter(chapterTitle);
+    selectedChapter = seasonJourney.chapters.firstWhere((Chapter chapter) => chapter.title == chapterTitle, orElse: () => null);
     selectedChapterChallenges.clear();
-    chapter.challenges.forEach((String challengeTitle) {
-      Challenge challenge = savedChapterChallenges.firstWhere((Challenge cha) => cha.title == challengeTitle, orElse: () => null);
-      selectedChapterChallenges.add(challenge == null ? Challenge(chapter: chapter.title, title: challengeTitle, isCompleted: false) : challenge);
+    selectedChapter.challenges.forEach((String challengeTitle) {
+      Challenge challenge = toggledChapterChallenges.firstWhere((Challenge cha) => cha.title == challengeTitle, orElse: () => null);
+      selectedChapterChallenges.add(challenge == null ? Challenge(chapter: selectedChapter.title, title: challengeTitle, isCompleted: false) : challenge);
     });
     update();
   }
@@ -64,7 +69,7 @@ class Controller extends GetxController {
   Future<void> toggleCompleted(Challenge updatedChallenge) async {
     int index = selectedChapterChallenges.indexOf(updatedChallenge);
     selectedChapterChallenges[index].isCompleted = !selectedChapterChallenges[index].isCompleted;
-    chapter.amountCompletedChallenges = chapter.amountCompletedChallenges + (selectedChapterChallenges[index].isCompleted == true ? 1 : -1);
+    selectedChapter.amountCompletedChallenges = selectedChapter.amountCompletedChallenges + (selectedChapterChallenges[index].isCompleted == true ? 1 : -1);
     await dbProvider.toggleCompleted(selectedChapterChallenges[index]);
     await _setCheckedValues();
   }

@@ -41,7 +41,7 @@ class ChapterWidgetState extends State<ChapterWidget> {
                 child: Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: Text(
-                    controller.chapter == null ? "" : controller.chapter.reward,
+                    controller.selectedChapter == null ? "" : controller.selectedChapter.reward,
                     style: TextStyle(
                       fontSize: 22,
                     ),
@@ -80,7 +80,7 @@ class ChapterWidgetState extends State<ChapterWidget> {
 
   List<Widget> _challengesWidget(Controller controller) {
     // If no challenges yet exists for chapter OR current chapter is differnet than previously selected chapter
-    if (controller.selectedChapterChallenges == null || (controller.chapter != null && controller.chapter.title != widget.chapter)) {
+    if (controller.selectedChapterChallenges == null || (controller.selectedChapter != null && controller.selectedChapter.title != widget.chapter)) {
       return [];
     } else {
       return controller.selectedChapterChallenges.map((Challenge challenge) {

@@ -9,10 +9,10 @@ void main() {
   group('App unit tests', () {
     test('Test initial variable values', () {
       expect(controller.seasonJourney, null);
-      expect(controller.chapter, null);
+      expect(controller.selectedChapter, null);
       expect(controller.dbProvider, null);
       expect(controller.selectedChapterChallenges, []);
-      expect(controller.savedChapterChallenges, []);
+      expect(controller.toggledChapterChallenges, []);
       expect(controller.amountChecked, 0);
       expect(controller.amountCheckedPercentage, 0.0);
       expect(controller.amountCheckedLabel, "0.0%");
@@ -23,10 +23,10 @@ void main() {
     test('Test initialized variable values', () async {
       await controller.initTestData();
       expect(controller.seasonJourney != null, true);
-      expect(controller.chapter, null);
+      expect(controller.selectedChapter, null);
       expect(controller.dbProvider, null);
       expect(controller.selectedChapterChallenges, []);
-      expect(controller.savedChapterChallenges, []);
+      expect(controller.toggledChapterChallenges, []);
       expect(controller.amountChecked, 0);
       expect(controller.amountCheckedPercentage, 0.0);
       expect(controller.amountCheckedLabel, "0.0%");
