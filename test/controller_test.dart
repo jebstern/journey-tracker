@@ -30,9 +30,8 @@ void main() {
       expect(controller.amountChecked, 0);
       expect(controller.amountCheckedPercentage, 0.0);
       expect(controller.amountCheckedLabel, "0.0%");
-      expect(controller.maxChallengesAmount, 0);
-      expect(controller.maxChallengesAmount, 1);
-      expect(controller.title, null);
+      expect(controller.maxChallengesAmount, 94);
+      expect(controller.title, 'Season 22');
     });
   });
 }
