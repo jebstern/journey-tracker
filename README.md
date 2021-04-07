@@ -1,16 +1,12 @@
-# journey_tracker
+# D3 Journey Tracker
 
-A new Flutter project.
+## Info
+This a working demo application for the blog posts which I wrote, and can be found here:
+<TODO ADD URL>
+  
+The code is not optimal, as it showcases how null safety works in Flutter.
 
-## Getting Started
+## "Normal" vs null-safe
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- `main` branch is non null-safe
+- `null-safe` branch is null-safe
