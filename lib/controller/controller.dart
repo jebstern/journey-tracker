@@ -6,20 +6,21 @@ import 'package:get/state_manager.dart';
 import 'package:journey_tracker/model/challenge_model.dart';
 import 'package:journey_tracker/model/season_journey_model.dart';
 import 'package:journey_tracker/repository/db_provider.dart';
+import 'package:collection/collection.dart';
 
 class Controller extends GetxController {
   static Controller get to => Get.find();
   bool initialised = false;
-  SeasonJourneyModel seasonJourneyModel;
-  Chapter selectedChapter;
-  DBProvider dbProvider;
+  late final SeasonJourneyModel seasonJourneyModel;
+  late Chapter selectedChapter;
+  late final DBProvider dbProvider;
   List<Challenge> selectedChapterChallenges = [];
   List<Challenge> toggledChapterChallenges = [];
   int amountChecked = 0;
   double amountCheckedPercentage = 0.0;
   String amountCheckedLabel = "0.0%";
   int maxChallengesAmount = 0;
-  String title;
+  late String title;
 
   Controller() {
     _init();
@@ -28,12 +29,11 @@ class Controller extends GetxController {
   Controller.empty();
 
   Future<void> _init() async {
-    print("Controller - _init() called!");
     dbProvider = DBProvider();
-    await Future.delayed(Duration(seconds: 3), (){});
+    await Future.delayed(Duration(seconds: 3), () {});
     String jsonString = await rootBundle.loadString("assets/seasonJourney.json");
     seasonJourneyModel = SeasonJourneyModel.fromJson(json.decode(jsonString));
-    title = seasonJourneyModel.title ?? "unknownSeason";
+    title = seasonJourneyModel.title != "" ? seasonJourneyModel.title : "unknownSeason";
     await dbProvider.initDb(title);
     seasonJourneyModel.chapters.forEach((Chapter chapter) async {
       maxChallengesAmount += chapter.challenges.length;
@@ -57,10 +57,11 @@ class Controller extends GetxController {
   Future<void> setChapter(String chapterTitle) async {
     toggledChapterChallenges.clear();
     toggledChapterChallenges = await dbProvider.getChallengesFromChapter(chapterTitle);
-    selectedChapter = seasonJourneyModel.chapters.firstWhere((Chapter chapter) => chapter.title == chapterTitle, orElse: () => null);
+    Chapter? chapter = seasonJourneyModel.chapters.firstWhereOrNull((Chapter chapter) => chapter.title == chapterTitle);
     selectedChapterChallenges.clear();
+    selectedChapter = chapter == null ? Chapter(challenges: []) : chapter;
     selectedChapter.challenges.forEach((String challengeTitle) {
-      Challenge challenge = toggledChapterChallenges.firstWhere((Challenge cha) => cha.title == challengeTitle, orElse: () => null);
+      Challenge? challenge = toggledChapterChallenges.firstWhereOrNull((Challenge cha) => cha.title == challengeTitle);
       selectedChapterChallenges.add(challenge == null ? Challenge(chapter: selectedChapter.title, title: challengeTitle, isCompleted: false) : challenge);
     });
     update();

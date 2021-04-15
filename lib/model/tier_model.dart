@@ -1,11 +1,11 @@
 class Tier {
-  int id;
-  String title;
-  String reward;
+  late int id;
+  late String title;
+  late String reward;
 
   Tier({
-    this.title,
-    this.reward,
+    required this.title,
+    required this.reward,
   });
 
   Map<String, dynamic> toMap() {

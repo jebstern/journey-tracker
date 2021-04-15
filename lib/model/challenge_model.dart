@@ -1,13 +1,13 @@
 class Challenge {
-  int id;
-  String title;
-  String chapter;
-  bool isCompleted;
+  int? id;
+  late String title;
+  late String chapter;
+  late bool isCompleted;
 
   Challenge({
-    this.title,
-    this.chapter,
-    this.isCompleted,
+    required this.title,
+    required this.chapter,
+    required this.isCompleted,
   });
 
   Map<String, dynamic> toMap() {

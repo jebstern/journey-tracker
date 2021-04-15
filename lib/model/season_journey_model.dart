@@ -1,16 +1,16 @@
 class SeasonJourneyModel {
   SeasonJourneyModel({
-    this.title,
-    this.chapters,
+    this.title = "",
+    this.chapters = const [],
   });
 
-  String title;
-  List<Chapter> chapters;
+  late String title;
+  late List<Chapter> chapters;
 
   factory SeasonJourneyModel.fromJson(Map<String, dynamic> json) => SeasonJourneyModel(
-        title: json["title"],
+        title: json["title"] ?? "",
         chapters: List<Chapter>.from(
-          json["chapters"].map((x) => Chapter.fromJson(x)),
+          json["chapters"].map((x) => Chapter.fromJson(x)) ?? [],
         ),
       );
 
@@ -24,9 +24,9 @@ class SeasonJourneyModel {
 
 class Chapter {
   Chapter({
-    this.title,
-    this.challenges,
-    this.reward,
+    this.title = "",
+    this.challenges = const [],
+    this.reward = "",
   });
 
   String title;
@@ -35,11 +35,11 @@ class Chapter {
   int amountCompletedChallenges = 0;
 
   factory Chapter.fromJson(Map<String, dynamic> json) => Chapter(
-        title: json["title"],
+        title: json["title"] ?? "",
         challenges: List<String>.from(
-          json["challenges"].map((x) => x),
+          json["challenges"].map((x) => x) ?? [],
         ),
-        reward: json["reward"],
+        reward: json["reward"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {

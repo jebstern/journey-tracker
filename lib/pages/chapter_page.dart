@@ -6,7 +6,7 @@ import 'package:journey_tracker/model/challenge_model.dart';
 class ChapterWidget extends StatefulWidget {
   final String chapter;
 
-  ChapterWidget({Key key, @required this.chapter}) : super(key: key);
+  ChapterWidget({Key? key, required this.chapter}) : super(key: key);
 
   @override
   ChapterWidgetState createState() => ChapterWidgetState();
@@ -14,10 +14,18 @@ class ChapterWidget extends StatefulWidget {
 
 class ChapterWidgetState extends State<ChapterWidget> {
   final Controller c = Get.find<Controller>();
+  bool _initialized = false;
 
   void initState() {
     super.initState();
-    c.setChapter(widget.chapter);
+    _setChapter();
+  }
+
+  Future<void> _setChapter() async {
+    await c.setChapter(widget.chapter);
+    setState(() {
+      _initialized = true;
+    });
   }
 
   @override
@@ -28,29 +36,31 @@ class ChapterWidgetState extends State<ChapterWidget> {
         appBar: AppBar(
           title: Text(widget.chapter),
         ),
-        body: GetBuilder<Controller>(
-          builder: (controller) => TabBarView(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: _challengesWidget(controller),
-                ),
-              ),
-              Container(
-                color: Colors.grey[200],
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Text(
-                    controller.selectedChapter == null ? "" : controller.selectedChapter.reward,
-                    style: TextStyle(
-                      fontSize: 22,
+        body: !_initialized
+            ? Container()
+            : GetBuilder<Controller>(
+                builder: (controller) => TabBarView(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: _challengesWidget(controller),
+                      ),
                     ),
-                  ),
+                    Container(
+                      color: Colors.grey[200],
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text(
+                          controller.selectedChapter.reward,
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
         bottomNavigationBar: TabBar(
           tabs: [
             Tab(
@@ -79,8 +89,8 @@ class ChapterWidgetState extends State<ChapterWidget> {
   }
 
   List<Widget> _challengesWidget(Controller controller) {
-    // If no challenges yet exists for chapter OR current chapter is differnet than previously selected chapter
-    if (controller.selectedChapterChallenges == null || (controller.selectedChapter != null && controller.selectedChapter.title != widget.chapter)) {
+    // If current chapter is different than previously selected chapter
+    if (controller.selectedChapter.title != widget.chapter) {
       return [];
     } else {
       return controller.selectedChapterChallenges.map((Challenge challenge) {

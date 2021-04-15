@@ -18,19 +18,19 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 2.0.0+1
 
 environment:
-  sdk: ">=2.11.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  get: ^3.26.0
+  get: ^4.1.4
   intl: ^0.17.0
   sqflite: ^2.0.0+3
   path: ^1.8.0
   path_provider: ^2.0.1
-  percent_indicator: ^2.1.9+1
-
+  percent_indicator: ^3.0.1
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:

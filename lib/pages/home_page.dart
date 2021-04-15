@@ -6,7 +6,7 @@ import 'package:journey_tracker/pages/settings_page.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _getDrawerItems(Controller controller) {
     List<Widget> items = [];
 
-    if (controller.seasonJourneyModel.chapters == null) {
+    if (controller.seasonJourneyModel.chapters.length == 0) {
       return [];
     }
 

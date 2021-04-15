@@ -15,7 +15,7 @@ final String createChallengeSql = "CREATE TABLE $tableChallenges ("
     "$columnIsCompleted INTEGER DEFAULT 0)";
 
 class DBProvider {
-  static Database _db;
+  late final Database _db;
 
   Future<void> initDb(String dbName) async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
