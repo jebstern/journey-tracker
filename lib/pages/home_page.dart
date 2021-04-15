@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _getDrawerItems(Controller controller) {
     List<Widget> items = [];
 
-    if (controller.seasonJourney.chapters == null) {
+    if (controller.seasonJourneyModel.chapters == null) {
       return [];
     }
 
@@ -120,15 +120,15 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
-    for (int i = 0; i < controller.seasonJourney.chapters.length; i++) {
+    for (int i = 0; i < controller.seasonJourneyModel.chapters.length; i++) {
       items.add(ListTile(
         leading: Icon(Icons.flare_sharp),
-        title: Text(controller.seasonJourney.chapters[i].title),
+        title: Text(controller.seasonJourneyModel.chapters[i].title),
         onTap: () {
           Get.back();
-          Get.to(() => ChapterWidget(chapter: controller.seasonJourney.chapters[i].title));
+          Get.to(() => ChapterWidget(chapter: controller.seasonJourneyModel.chapters[i].title));
         },
-        trailing: Text("${controller.seasonJourney.chapters[i].amountCompletedChallenges}/${controller.seasonJourney.chapters[i].challenges.length}"),
+        trailing: Text("${controller.seasonJourneyModel.chapters[i].amountCompletedChallenges}/${controller.seasonJourneyModel.chapters[i].challenges.length}"),
       ));
     }
 

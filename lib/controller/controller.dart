@@ -10,7 +10,7 @@ import 'package:journey_tracker/repository/db_provider.dart';
 class Controller extends GetxController {
   static Controller get to => Get.find();
   bool initialised = false;
-  SeasonJourney seasonJourney;
+  SeasonJourneyModel seasonJourneyModel;
   Chapter selectedChapter;
   DBProvider dbProvider;
   List<Challenge> selectedChapterChallenges = [];
@@ -32,10 +32,10 @@ class Controller extends GetxController {
     dbProvider = DBProvider();
     await Future.delayed(Duration(seconds: 3), (){});
     String jsonString = await rootBundle.loadString("assets/seasonJourney.json");
-    seasonJourney = SeasonJourney.fromJson(json.decode(jsonString));
-    title = seasonJourney.title;
-    await dbProvider.initDb(seasonJourney.title ?? "unknownSeason");
-    seasonJourney.chapters.forEach((Chapter chapter) async {
+    seasonJourneyModel = SeasonJourneyModel.fromJson(json.decode(jsonString));
+    title = seasonJourneyModel.title ?? "unknownSeason";
+    await dbProvider.initDb(title);
+    seasonJourneyModel.chapters.forEach((Chapter chapter) async {
       maxChallengesAmount += chapter.challenges.length;
       chapter.amountCompletedChallenges = await dbProvider.completedChallengesInChapter(chapter.title);
     });
@@ -45,9 +45,9 @@ class Controller extends GetxController {
   }
 
   Future<void> initTestData() async {
-    seasonJourney = SeasonJourney.fromJson(json.decode(await rootBundle.loadString("assets/seasonJourney.json")));
-    title = seasonJourney.title;
-    seasonJourney.chapters.forEach((Chapter chapter) {
+    seasonJourneyModel = SeasonJourneyModel.fromJson(json.decode(await rootBundle.loadString("assets/seasonJourney.json")));
+    title = seasonJourneyModel.title;
+    seasonJourneyModel.chapters.forEach((Chapter chapter) {
       maxChallengesAmount += chapter.challenges.length;
     });
     initialised = true;
@@ -57,7 +57,7 @@ class Controller extends GetxController {
   Future<void> setChapter(String chapterTitle) async {
     toggledChapterChallenges.clear();
     toggledChapterChallenges = await dbProvider.getChallengesFromChapter(chapterTitle);
-    selectedChapter = seasonJourney.chapters.firstWhere((Chapter chapter) => chapter.title == chapterTitle, orElse: () => null);
+    selectedChapter = seasonJourneyModel.chapters.firstWhere((Chapter chapter) => chapter.title == chapterTitle, orElse: () => null);
     selectedChapterChallenges.clear();
     selectedChapter.challenges.forEach((String challengeTitle) {
       Challenge challenge = toggledChapterChallenges.firstWhere((Challenge cha) => cha.title == challengeTitle, orElse: () => null);

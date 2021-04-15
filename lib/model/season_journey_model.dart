@@ -1,5 +1,5 @@
-class SeasonJourney {
-  SeasonJourney({
+class SeasonJourneyModel {
+  SeasonJourneyModel({
     this.title,
     this.chapters,
   });
@@ -7,7 +7,7 @@ class SeasonJourney {
   String title;
   List<Chapter> chapters;
 
-  factory SeasonJourney.fromJson(Map<String, dynamic> json) => SeasonJourney(
+  factory SeasonJourneyModel.fromJson(Map<String, dynamic> json) => SeasonJourneyModel(
         title: json["title"],
         chapters: List<Chapter>.from(
           json["chapters"].map((x) => Chapter.fromJson(x)),

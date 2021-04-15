@@ -8,7 +8,7 @@ void main() {
 
   group('App unit tests', () {
     test('Test initial variable values', () {
-      expect(controller.seasonJourney, null);
+      expect(controller.seasonJourneyModel, null);
       expect(controller.selectedChapter, null);
       expect(controller.dbProvider, null);
       expect(controller.selectedChapterChallenges, []);
@@ -22,7 +22,7 @@ void main() {
 
     test('Test initialized variable values', () async {
       await controller.initTestData();
-      expect(controller.seasonJourney != null, true);
+      expect(controller.seasonJourneyModel != null, true);
       expect(controller.selectedChapter, null);
       expect(controller.dbProvider, null);
       expect(controller.selectedChapterChallenges, []);
